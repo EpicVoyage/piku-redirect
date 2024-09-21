@@ -9,10 +9,13 @@ NGINX_INCLUDE_FILE=nginx.conf
 NGINX_SERVER_NAME=my-old-domain.com www.my-old-domain.com
 ```
 
-Set the new domain in `nginx.conf`
+Set the new domain in `nginx.conf`. We allow `/.well-known/acme-challenge` to pass through so that Let's Encrypt can
+still verify the old domain:
 
 ```
-return 302 $scheme://my-new-domain.com$request_uri;
+location ~ ^/(?!.well-known/acme-challenge) {
+  return 302 $scheme://my-new-domain.com$request_uri;
+}
 ```
 
 ```shell
